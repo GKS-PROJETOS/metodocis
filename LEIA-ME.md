@@ -140,3 +140,8 @@ original, seção por seção.
 - O mobile do original é um layout separado (11 blocos em vez de 12 — o de
   camarotes é escondido) com tamanhos de fonte próprios. Reproduzi os tamanhos
   e o comportamento, mas a altura total no celular não é igual à do original.
+
+
+## Deploy no Cloudflare
+
+Este projeto agora e publicado em eusougustavosampaio.com/metodocis via uma rota do Cloudflare Workers apontando para este worker. O build empacota os arquivos dentro de uma subpasta metodocis/ para casar com o prefixo da rota.

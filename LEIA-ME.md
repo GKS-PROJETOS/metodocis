@@ -8,7 +8,7 @@ metodocis/
 ├── index.html
 ├── styles.css
 └── assets/
-    ├── img/    ← as 8 imagens da página (nomes legíveis)
+    ├── img/    ← as 9 imagens da página (nomes legíveis)
     └── real/   ← os mesmos arquivos como vieram do site
 ```
 
@@ -26,11 +26,15 @@ Altura de cada bloco, num viewport de 1357px de conteúdo:
 | depoimentos | 925 | 925 |
 | edição de Goiânia | 683 | 683 |
 | fundamentado em ciência | 1465 | 1466 |
-| pacotes | 1330 | 1329 |
+| pacotes | 1330 | 1446 * |
 | camarotes | 352 | 352 |
 | mapa | 584 | 584 |
 | dúvidas | 274 | 274 |
-| **página inteira** | **9765** | **9764** |
+| **página inteira** | **9765** | **9881** * |
+
+\* O bloco de pacotes cresceu 117px depois que cada benefício ganhou um check na
+frente (pedido, ver *Observações*). Fora ele, todos os blocos continuam com a
+altura do original, ao pixel.
 
 As posições horizontais também batem: card do ciclo em x292, imagem do ciclo em
 x346, grade dos números em x246, grade do "para quem" em x171, vídeo vertical em
@@ -83,6 +87,29 @@ aplicado antes de mexer:
 | Foto de Goiânia | só raio de 36px, sem borda | ganhou anel branco de 6px |
 | Vídeos | embed carregado no clique | capa com play; ver abaixo |
 
+## O hero no celular
+
+No original — e na primeira versão desta cópia — o hero do celular era a mesma
+foto em `cover`, e nessa largura o recorte jogava a Camila em cima do texto e
+deixava o Paulo e a Julia de fora. Abaixo de 860px o bloco se desmonta em dois:
+
+- **a foto dos três abre a página**, de ponta a ponta: `assets/img/hero-mobile.jpg`,
+  recorte de 1322×1187 tirado do `hero.png`, com os nomes que já vêm na arte;
+- **o texto vem inteiro embaixo**, em um grupo único e centrado sobre navy limpo —
+  logo, título, data, local, chamada e botão, sem foto atrás.
+
+A ordem é feita com `order: -1` na imagem: no HTML ela continua depois do texto,
+que é o que interessa para quem lê a página sem CSS.
+
+A altura da foto é limitada a `78vw`, então o corte cai na altura do peito em
+qualquer largura, em vez de esticar o hero no tablet, e um fade nos últimos 18%
+dissolve a foto no navy — sem faixa de borda reta no meio da página. Em telas de
+360px para cima o botão ainda cabe acima da dobra.
+
+De quebra o celular ficou ~1MB mais leve: nessa faixa o `hero.png` (1,2MB) sai do
+CSS e o navegador baixa só o recorte, de 255KB. A tag tem `loading="lazy"`, então
+o desktop não baixa o recorte que não usa.
+
 ## Player de vídeo
 
 O vídeo toca **dentro da página**, sempre. O clique troca a capa pelo player do
@@ -133,7 +160,22 @@ original, seção por seção.
   própria mensagem pronta (inscrição, dúvida, pacote específico, camarote).
 - Os dois vídeos são do YouTube: `WZBjljrvDac` (conhecendo) e `VksKSTzm8s4`
   (depoimentos).
-- Mantive o erro de digitação "ressignifcadas" do card 3, que está assim no site.
+- Correções de texto feitas em cima do original — os erros estão assim no site
+  no ar: "ressignifcadas" → "ressignificadas", "conjuge" → "cônjuge", "por todo
+  mundo" → "por todo o mundo", "á vista" → "à vista" nos quatro planos, "2 análise
+  comportamental" → "2 análises comportamentais" e "Networkings estratégico" →
+  "Networking estratégico".
+- Cada benefício dos quatro pacotes leva na frente o `check.png` — o mesmo ícone
+  que os selos da seção de ciência já usavam. É um `::before` de 19px em grid, e
+  não uma imagem por linha, então as frases que quebram alinham depois do ícone e
+  não embaixo dele.
+- As três colunas de camarote usam `minmax(0, 299px)` em vez de 299px fixos: com
+  a medida travada, entre 861px e 943px de janela elas estouravam a largura e a
+  página ganhava barra de rolagem horizontal.
+- No celular o texto empilhado recebeu respiro: "DEPOIMENTOS" e o bloco de ciência
+  estavam com título, chamada e linha de apoio colados, e havia um vão de 111px
+  entre as 5 áreas e os selos. O "Este não é mais um evento motivacional." tinha
+  32px, maior que o título que ele apresenta, e caiu para 21px.
 - O original serve as imagens no tamanho exato de exibição (1x), então elas
   ficam um pouco moles em tela retina. Os arquivos como vieram estão em
   `assets/real/`.

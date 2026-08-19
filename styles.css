@@ -169,6 +169,10 @@ a:focus-visible, button:focus-visible {
 }
 .hero__lead strong { font-weight: 700; }
 
+/* Foto dos tres apresentadores. No desktop eles vem no proprio fundo do hero,
+   entao aqui ela nao aparece. */
+.hero__pessoas { display: none; }
+
 /* ------------------------------------------------------------ conhecendo -- */
 
 .conhecendo { padding: 45px 0 65px; }
@@ -403,8 +407,26 @@ a:focus-visible, button:focus-visible {
 }
 .plano__top h3 { font-size: 29px; line-height: 1.3; font-weight: 700; color: var(--off); }
 
-.plano__itens { padding: 22px 20px 0; display: grid; gap: 6px; }
-.plano__itens li { font-size: 17px; line-height: 1.25; }
+.plano__itens { padding: 22px 20px 0; display: grid; gap: 8px; }
+
+/* cada beneficio leva na frente o mesmo check dourado da secao de ciencia.
+   O grid mantem as linhas que quebram alinhadas depois do icone, e nao embaixo
+   dele. */
+.plano__itens li {
+  display: grid;
+  grid-template-columns: 19px 1fr;
+  align-items: start;
+  gap: 9px;
+  font-size: 17px;
+  line-height: 1.25;
+}
+.plano__itens li::before {
+  content: "";
+  width: 19px;
+  height: 18px;
+  margin-top: 2px;
+  background: url("assets/img/check.png") 50% 50% / contain no-repeat;
+}
 
 /* o preco fica colado no rodape do card, alinhando os botoes das 4 colunas */
 .plano__preco { margin-top: auto; padding: 30px 20px 0; }
@@ -428,7 +450,9 @@ a:focus-visible, button:focus-visible {
   max-width: 944px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 299px);
+  /* minmax em vez de 299px fixo: entre 861px e 943px de janela as tres colunas
+     estouravam a largura e a pagina ganhava barra horizontal */
+  grid-template-columns: repeat(3, minmax(0, 299px));
   justify-content: center;
   gap: 23px;
 }
@@ -506,7 +530,39 @@ html { scroll-behavior: smooth; }
 }
 
 @media (max-width: 860px) {
-  .hero { padding-top: 64px; background-position: 52% 49%; }
+  /* O fundo do hero, recortado nessa largura, jogava a Camila em cima do texto
+     e deixava os outros dois de fora. No mobile o bloco se desmonta em dois: a
+     foto dos tres abre a pagina, de ponta a ponta, e o texto vem inteiro embaixo
+     dela, em um grupo unico sobre navy limpo. */
+  .hero {
+    display: flex;            /* para a foto poder ir para cima com order */
+    flex-direction: column;
+    padding: 0 0 42px;
+    background: var(--hero-bg);
+    text-align: center;
+  }
+  .hero .wrap { width: min(560px, 100% - 40px); }
+  .hero__logo { width: 186px; margin: 0 auto 12px; }
+  .hero__title { max-width: none; margin-bottom: 12px; }
+  .hero__local { margin-bottom: 14px; }
+  .hero__lead { max-width: none; margin-bottom: 26px; }
+
+  /* A altura acompanha a largura da tela (78vw) em vez da proporcao cheia da
+     foto: o corte cai sempre na altura do peito, e o hero nao vira uma tela e
+     meia no tablet. O fade no rodape dissolve a foto no navy do texto, para nao
+     ficar uma faixa com borda reta no meio da pagina. */
+  .hero__pessoas {
+    order: -1;
+    display: block;
+    width: 100%;
+    max-height: 78vw;
+    margin-bottom: 18px;
+    object-fit: cover;
+    object-position: 50% 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+  }
+
   .tit { font-size: 33px; }
   .lead, .ie .lead, .ciencia .lead { font-size: 20px; }
   .assista, .depo .assista, .assista--c { font-size: 20px; }
@@ -528,10 +584,26 @@ html { scroll-behavior: smooth; }
   .pacotes__grid { grid-template-columns: minmax(0, 340px); justify-content: center; margin-top: 48px; }
   .plano__top h3 { font-size: 37px; }   /* no mobile o original aumenta o nome do plano */
   .duvidas .tit { font-size: 29px; }
+
+  /* Respiro e hierarquia do texto empilhado: no desktop essas medidas vinham de
+     blocos posicionados lado a lado, e na coluna unica do mobile elas colavam
+     um paragrafo no outro (ou abriam um vao de 111px no meio do bloco). */
+  .ie .assista { margin-top: 28px; }
+  .ie__img { margin-top: 18px; }
+  .depo .lead { margin-top: 16px; }
+  .depo .assista { margin-top: 18px; }
+  .ciencia__sup { font-size: 21px; }   /* era 32px: ficava maior que o titulo */
+  .ciencia .tit { margin-top: 10px; }
+  .ciencia .lead { margin-top: 26px; }
+  .areas { margin-top: 34px; gap: 34px; }
+  .selos { margin-top: 40px; }
+  .edicao__local { margin-top: 14px; }
+  .mapa img { margin-top: 14px; }
 }
 
 @media (max-width: 620px) {
-  .hero__title { font-size: 34px; }
+  .hero__logo { width: 168px; }
+  .hero__title { font-size: 32px; }
   .hero__data, .hero__local { font-size: 22px; }
   .hero__lead { font-size: 18px; }
   .tit { font-size: 29px; }
